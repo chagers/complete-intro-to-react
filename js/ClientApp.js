@@ -1,21 +1,24 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
-import MyTitle from './MyTitle'
+import { render } from 'react-dom'
+import { HashRouter, Match } from 'react-router'
+import Landing from './Landing'
+import Search from './Search'
+import '../public/normalize.css'
+import '../public/style.css'
 
-var div = React.DOM.div
-var MyTitleFactory = React.createFactory(MyTitle)
-
-var MyFirstComponent = React.createClass({
-  render: function () {
+const App = React.createClass({
+  render () {
     return (
-			div(null,
-				MyTitleFactory({title: 'props are okay', color: 'teal'}),
-				MyTitleFactory({title: 'semicolons - why use em', color: 'aquamarine'}),
-				MyTitleFactory({title: 'this is another thing', color: 'tomato'}),
-				MyTitleFactory({title: 'got 99 rendering problems', color: 'rebeccapurple'})
-			)
+      // this (hashrouter) will typically be your root component
+      <HashRouter>
+        <div className='app'>
+          {/* homepage has to be exactly that pattern, otherwise you'll match literally every other route */}
+          <Match exactly pattern='/' component={Landing} />
+          <Match pattern='/search' component={Search} />
+        </div>
+      </HashRouter>
     )
   }
 })
 
-ReactDOM.render(React.createElement(MyFirstComponent), document.getElementById('app'))
+render(<App />, document.getElementById('app'))
