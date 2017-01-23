@@ -1,18 +1,34 @@
 import React from 'react'
-import { connect } from 'react-redux'
+import { connect } from 'react-redux' // dispatch comes from here
 import { Link } from 'react-router'
-const { string } = React.PropTypes
+import { setSearchTerm } from './actionCreators'
+const { string, func, object } = React.PropTypes
 
 const Landing = React.createClass({
+  contextTypes: {
+    router: object
+  },
   propTypes: {
-    searchTerm: string
+    searchTerm: string,
+    dispatch: func
+  },
+  handleSearchTermChange (event) {
+    var term = event.target.value || ''
+    this.props.dispatch(setSearchTerm(term))
+  },
+  handleSearchSubmit (event) {
+    event.preventDefault()
+    // adding context enables programmatic routing to the search page
+    this.context.router.transitionTo('/search')
   },
   render () {
     return (
       <div className='landing'>
         <h1>chagersVid</h1>
-        <input value={this.props.searchTerm} type='text' placeholder='Search' />
-        <Link to='/search'>or Browse All</Link>
+        <form onSubmit={this.handleSearchSubmit}>
+          <input onChange={this.handleSearchTermChange} value={this.props.searchTerm} type='text' placeholder='Search' />
+        </form>
+        <Link to='/search' onClick={this.handleSearchTermChange}>or Browse All</Link>
       </div>
     )
   }
@@ -25,4 +41,5 @@ const mapStateToProps = (state) => {
   }
 }
 
+// connect comes from react-redux
 export default connect(mapStateToProps)(Landing)
